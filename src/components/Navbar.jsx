@@ -1,63 +1,96 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { ArrowUpRight, Menu, TerminalSquare, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import { Terminal, Menu, X } from 'lucide-react';
+import { usePortfolio } from '../hooks/usePortfolio';
+
+const navItems = [
+  { path: '/', label: 'Overview' },
+  { path: '/projects', label: 'Projects' },
+  { path: '/about', label: 'Stack' },
+];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { content } = usePortfolio();
+  const { profile } = content;
   const isActive = (path) => location.pathname === path;
 
-  // REMOVED the bad location useEffect!
-
-  // Prevent scrolling when mobile menu is open (This effect is still good because it talks to the external DOM)
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   return (
     <>
-      <nav className="w-full px-6 md:px-10 h-24 flex justify-between items-center z-50 relative bg-white/40 backdrop-blur-md rounded-t-[2.5rem] border-b border-white">
-        <Link to="/" className="flex items-center gap-3 group z-50">
-          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(255,255,255,0.5)]">
-            <Terminal size={20} className="text-blue-600" />
-          </div>
-          <span className="text-slate-900 font-black text-xl tracking-tight">CORNELIUS_</span>
-        </Link>
-        
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center space-x-10 text-sm font-bold tracking-wide text-slate-500">
-          <Link to="/" className={`transition-colors hover:text-blue-600 ${isActive('/') && 'text-blue-600'}`}>Home</Link>
-          <Link to="/projects" className={`transition-colors hover:text-blue-600 ${isActive('/projects') && 'text-blue-600'}`}>Projects</Link>
-          <Link to="/about" className={`transition-colors hover:text-blue-600 ${isActive('/about') && 'text-blue-600'}`}>About</Link>
-          <Link to="/contact" className="px-6 py-3 bg-slate-900 text-white font-bold text-sm rounded-2xl hover:bg-slate-800 transition-colors shadow-lg">
-            Book a call
+      <header className="sticky top-0 z-50 border-b border-cyan-200/10 bg-[#08131b]/86 backdrop-blur-xl">
+        <nav className="grid h-20 grid-cols-[1fr_auto] items-center lg:grid-cols-[1fr_auto_1fr]">
+          <Link to="/" className="flex h-full items-center gap-3 border-r border-cyan-200/10 px-5 md:px-8">
+            <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-cyan-300 text-[#071116]">
+              <TerminalSquare size={21} />
+            </span>
+            <span>
+              <span className="block text-sm font-black tracking-[0.18em] text-cyan-50">CORNELIUS</span>
+              <span className="block text-xs font-bold uppercase tracking-[0.12em] text-cyan-100/45">{profile.role}</span>
+            </span>
           </Link>
-        </div>
 
-        {/* Mobile Menu Button */}
-        <button 
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden z-50 p-2 bg-white rounded-full shadow-sm text-slate-900"
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </nav>
+          <div className="hidden items-center gap-2 px-4 lg:flex">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`rounded-lg px-4 py-2 text-sm font-black transition-colors ${
+                  isActive(item.path)
+                    ? 'bg-cyan-300 text-[#071116]'
+                    : 'text-cyan-100/55 hover:bg-cyan-100/8 hover:text-cyan-50'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
 
-      {/* Mobile Menu Overlay */}
-      {isOpen && (
-        <div className="fixed inset-0 z-40 bg-[#fff0eb]/95 backdrop-blur-xl flex flex-col items-center justify-center animate-in fade-in duration-300 md:hidden">
-          <div className="flex flex-col items-center gap-8 text-2xl font-black text-slate-900">
-            {/* Added onClick={() => setIsOpen(false)} to every single link! */}
-            <Link to="/" onClick={() => setIsOpen(false)} className={isActive('/') ? 'text-blue-600' : ''}>Home</Link>
-            <Link to="/projects" onClick={() => setIsOpen(false)} className={isActive('/projects') ? 'text-blue-600' : ''}>Projects</Link>
-            <Link to="/about" onClick={() => setIsOpen(false)} className={isActive('/about') ? 'text-blue-600' : ''}>About</Link>
-            <Link to="/contact" onClick={() => setIsOpen(false)} className="mt-4 px-8 py-4 bg-blue-600 text-white rounded-full shadow-xl">
-              Book a call
+          <div className="hidden h-full items-center justify-end border-l border-cyan-200/10 px-5 md:px-8 lg:flex">
+            <Link
+              to="/contact"
+              className="inline-flex items-center gap-2 rounded-lg bg-lime-300 px-5 py-3 text-sm font-black text-[#071116] transition-transform hover:-translate-y-0.5"
+            >
+              Hire / Contact <ArrowUpRight size={16} />
             </Link>
+          </div>
+
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="mr-4 justify-self-end rounded-lg border border-cyan-200/14 bg-cyan-100/6 p-2 text-cyan-50 lg:hidden"
+            type="button"
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isOpen}
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </nav>
+      </header>
+
+      {isOpen && (
+        <div className="fixed inset-0 z-40 bg-[#071116]/98 px-5 pt-28 backdrop-blur-xl lg:hidden">
+          <div className="mx-auto flex max-w-md flex-col gap-3">
+            {[...navItems, { path: '/contact', label: 'Contact' }].map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={() => setIsOpen(false)}
+                className={`rounded-lg border px-5 py-5 text-3xl font-black ${
+                  isActive(item.path)
+                    ? 'border-cyan-300 bg-cyan-300 text-[#071116]'
+                    : 'border-cyan-200/14 bg-cyan-100/6 text-cyan-50'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
         </div>
       )}

@@ -1,16 +1,66 @@
-# React + Vite
+# Cornelius Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React, Vite, Node, and PostgreSQL portfolio app with a secure admin dashboard for real-time content updates.
 
-Currently, two official plugins are available:
+## Local Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Install dependencies:
 
-## React Compiler
+```powershell
+npm.cmd install
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Create a local `.env` from `.env.example`, then run the app. The Node server loads `.env` automatically in local development:
 
-## Expanding the ESLint configuration
+```powershell
+npm.cmd run server
+npm.cmd run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Open:
+
+- Site: http://127.0.0.1:5173
+- Admin: http://127.0.0.1:5173/admin
+
+The backend uses PostgreSQL when `DATABASE_URL` is set. If `DATABASE_URL` is missing, it falls back to `src/data/portfolio-content.json` for local development only.
+
+For the local PostgreSQL 18 install on this machine, use:
+
+```env
+DATABASE_URL=postgresql://postgres:YOUR_POSTGRES_PASSWORD@localhost:5432/my_portfolio
+POSTGRES_SSL=false
+```
+
+If your password includes symbols like `@`, `#`, `/`, `?`, or `:`, URL-encode the password before putting it in `DATABASE_URL`.
+
+## Required Environment Variables
+
+- `DATABASE_URL`: PostgreSQL connection string.
+- `ADMIN_EMAIL`: first admin email. The server creates this admin if it does not exist.
+- `ADMIN_PASSWORD`: first admin password. Change it in your host settings after setup if needed.
+- `SESSION_SECRET`: long random secret used to sign admin sessions.
+- `POSTGRES_SSL`: set to `true` for hosted Postgres providers such as Neon, Render, or Railway.
+
+## Deployment
+
+Use a host that can run a Node server and attach PostgreSQL, such as Render, Railway, Fly.io, or a VPS.
+
+Build command:
+
+```bash
+npm install && npm run build
+```
+
+Start command:
+
+```bash
+npm start
+```
+
+Add the environment variables above in your hosting dashboard. Connect the host to your GitHub repository and enable auto-deploys from the main branch. After that, pushing to GitHub rebuilds and restarts the live site.
+
+## Database
+
+The server auto-creates the needed tables on startup. The SQL is also available in `server/schema.sql`.
+
+The editable portfolio content is stored as JSONB in PostgreSQL and streamed to open pages with Server-Sent Events after admin saves.

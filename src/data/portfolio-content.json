@@ -1,0 +1,224 @@
+{
+  "profile": {
+    "name": "Cornelius Eshun",
+    "role": "Software Engineer",
+    "email": "eshuncornelius98@gmail.com",
+    "location": "Accra, Ghana",
+    "headline": "Full-stack developer building modern web, mobile, and data-powered systems.",
+    "summary": "I turn product ideas into clean interfaces, reliable APIs, and database-backed applications that are ready to deploy, maintain, and improve.",
+    "availability": "Available for engineering roles, freelance builds, and technical collaborations",
+    "socials": {
+      "github": null,
+      "linkedin": null,
+      "x": null
+    }
+  },
+  "metrics": [
+    {
+      "value": "10+",
+      "label": "Core technologies",
+      "icon": "Cpu"
+    },
+    {
+      "value": "4",
+      "label": "Project categories",
+      "icon": "Blocks"
+    },
+    {
+      "value": "24h",
+      "label": "Reply target",
+      "icon": "Activity"
+    }
+  ],
+  "stack": [
+    "React",
+    "JavaScript",
+    "Node.js",
+    "Express",
+    "PostgreSQL",
+    "MongoDB",
+    "Oracle DB",
+    "Tailwind CSS",
+    "React Native",
+    "REST APIs",
+    "Git",
+    "Vercel"
+  ],
+  "capabilities": [
+    {
+      "title": "Frontend Engineering",
+      "description": "Responsive React apps, reusable components, dashboards, forms, routing, and polished UI states.",
+      "icon": "LayoutDashboard",
+      "stack": [
+        "React",
+        "Tailwind",
+        "Routing",
+        "UI State"
+      ]
+    },
+    {
+      "title": "Backend Development",
+      "description": "Node.js APIs, service structure, endpoint design, validation, and database-connected business logic.",
+      "icon": "ServerCog",
+      "stack": [
+        "Node.js",
+        "REST",
+        "Express",
+        "Auth-ready"
+      ]
+    },
+    {
+      "title": "Database Systems",
+      "description": "Schema planning, SQL queries, relational modeling, reporting flows, and performance-minded data access.",
+      "icon": "Database",
+      "stack": [
+        "PostgreSQL",
+        "Oracle DB",
+        "SQL",
+        "Indexes"
+      ]
+    },
+    {
+      "title": "Deployment & Delivery",
+      "description": "Vercel deployments, build checks, environment setup, production polish, and maintainable handoff.",
+      "icon": "Cloud",
+      "stack": [
+        "Vercel",
+        "Builds",
+        "Git",
+        "QA"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "title": "Finance Operations Dashboard",
+      "type": "Frontend System",
+      "category": "Web",
+      "description": "A responsive analytics dashboard for scanning finance metrics, filtering records, and presenting operational performance clearly.",
+      "challenge": "Dense business data needed to feel readable, fast, and decision-friendly.",
+      "solution": "Built a dashboard-style UI structure with metric cards, filtering states, and clear visual hierarchy.",
+      "impact": "Improves reporting flow and reduces time spent searching through operational records.",
+      "tech": [
+        "React",
+        "Tailwind CSS",
+        "Charts"
+      ],
+      "icon": "Gauge",
+      "accent": "cyan"
+    },
+    {
+      "id": 2,
+      "title": "Inventory API Platform",
+      "type": "Backend System",
+      "category": "Backend",
+      "description": "A REST API foundation for products, stock changes, users, and transaction history with relational database structure.",
+      "challenge": "Inventory data needed predictable endpoints and a database model that could scale into dashboards or mobile apps.",
+      "solution": "Designed route groups, normalized tables, validation paths, and clean server-side responsibilities.",
+      "impact": "Creates a stable backend foundation for future product and reporting interfaces.",
+      "tech": [
+        "Node.js",
+        "Express",
+        "PostgreSQL"
+      ],
+      "icon": "ServerCog",
+      "accent": "lime"
+    },
+    {
+      "id": 3,
+      "title": "Secure Notes Mobile App",
+      "type": "Mobile Prototype",
+      "category": "Mobile",
+      "description": "A cross-platform notes app concept focused on private content, simple organization, local persistence, and fast mobile UX.",
+      "challenge": "The app needed to feel lightweight while still respecting user privacy and local data handling.",
+      "solution": "Mapped mobile-first screens, local storage flow, private note states, and simple interaction patterns.",
+      "impact": "Shows practical mobile thinking and secure local data design.",
+      "tech": [
+        "React Native",
+        "SQLite",
+        "Expo"
+      ],
+      "icon": "Smartphone",
+      "accent": "rose"
+    },
+    {
+      "id": 4,
+      "title": "Developer Portfolio Platform",
+      "type": "Portfolio Website",
+      "category": "Website",
+      "description": "A deployable portfolio platform for presenting engineering capability, selected work, technical stack, and contact paths.",
+      "challenge": "The site needed to communicate technical credibility quickly and look modern on all devices.",
+      "solution": "Built a strong tech-forward interface with reusable data, project sections, SEO metadata, and Vercel-ready build output.",
+      "impact": "Improves first impression for recruiters, clients, and collaborators.",
+      "tech": [
+        "React",
+        "Vite",
+        "Vercel"
+      ],
+      "icon": "TerminalSquare",
+      "accent": "violet"
+    }
+  ],
+  "workflow": [
+    {
+      "title": "Map the system",
+      "description": "Clarify users, data, routes, states, and the smallest version that solves the problem.",
+      "icon": "Workflow"
+    },
+    {
+      "title": "Build the core",
+      "description": "Create the interface, API paths, database models, and reusable logic that make the product work.",
+      "icon": "Braces"
+    },
+    {
+      "title": "Harden for launch",
+      "description": "Check responsiveness, validation, loading states, edge cases, build output, and deployment readiness.",
+      "icon": "ShieldCheck"
+    }
+  ],
+  "experience": [
+    {
+      "period": "2024 - Present",
+      "title": "Freelance Software Engineer",
+      "description": "Building full-stack apps, improving user interfaces, and delivering database-backed features with modern JavaScript tools."
+    },
+    {
+      "period": "2023 - 2024",
+      "title": "Database Administrator (Contract)",
+      "description": "Managed Oracle database schemas, optimized SQL queries, and supported reliable data operations for business systems."
+    }
+  ],
+  "credentials": [
+    {
+      "label": "Frontend",
+      "value": "React interfaces and dashboards",
+      "icon": "Code2"
+    },
+    {
+      "label": "Backend",
+      "value": "Node APIs and data logic",
+      "icon": "ServerCog"
+    },
+    {
+      "label": "Database",
+      "value": "PostgreSQL, Oracle DB, SQL",
+      "icon": "Database"
+    },
+    {
+      "label": "Quality",
+      "value": "Responsive, deployable, maintainable",
+      "icon": "Rocket"
+    },
+    {
+      "label": "Security",
+      "value": "Validation and safer app flows",
+      "icon": "LockKeyhole"
+    },
+    {
+      "label": "Versioning",
+      "value": "Git-based development workflow",
+      "icon": "GitBranch"
+    }
+  ]
+}

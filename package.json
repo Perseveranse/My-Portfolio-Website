@@ -3,8 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite",
+    "server": "node server/index.js",
+    "start": "node server/index.js",
+    "db:setup": "powershell -ExecutionPolicy Bypass -File scripts/setup-postgres.ps1",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -13,6 +19,7 @@
     "@emailjs/browser": "^4.4.1",
     "@tailwindcss/vite": "^4.2.4",
     "lucide-react": "^1.8.0",
+    "pg": "^8.20.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-router-dom": "^7.14.2"

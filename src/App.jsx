@@ -1,35 +1,38 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Footer from './components/Footer'; // <-- 1. Add this import
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import Projects from './pages/Projects';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import ProjectDetails from './pages/ProjectDetails';
+import Admin from './pages/Admin';
+import { PortfolioProvider } from './context/PortfolioContext';
 
 function App() {
   return (
-    <Router>
-      <div className="fixed inset-0 z-[-1] overflow-hidden bg-[#fff0eb]">
-        <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-orange-300/40 blur-[100px] mix-blend-multiply animate-pulse"></div>
-        <div className="absolute top-[20%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-purple-300/30 blur-[100px] mix-blend-multiply"></div>
-        <div className="absolute bottom-[-20%] left-[20%] w-[60vw] h-[60vw] rounded-full bg-rose-300/40 blur-[120px] mix-blend-multiply"></div>
-      </div>
+    <PortfolioProvider>
+      <Router>
+        <div className="site-bg fixed inset-0 z-[-1]" />
 
-      <div className="min-h-screen p-4 md:p-8 font-sans flex flex-col">
-        <div className="flex-1 w-full max-w-[1400px] mx-auto bg-white/40 backdrop-blur-3xl rounded-[2.5rem] shadow-[0_8px_40px_rgba(0,0,0,0.06)] border border-white/60 flex flex-col overflow-hidden relative">
-          <Navbar />
-          <div className="flex-1 flex flex-col">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-            </Routes>
+        <div className="min-h-screen px-3 py-3 font-sans text-[#e7f9ff] md:px-6 md:py-6">
+          <div className="tech-grid mx-auto flex min-h-[calc(100vh-1.5rem)] w-full max-w-[1500px] flex-col overflow-hidden rounded-xl border border-cyan-200/10 bg-[#08131b]/92 shadow-[0_28px_90px_rgba(0,0,0,0.35)] backdrop-blur">
+            <Navbar />
+            <main className="flex-1">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/projects/:id" element={<ProjectDetails />} />
+                <Route path="/admin" element={<Admin />} />
+              </Routes>
+            </main>
+            <Footer />
           </div>
-          <Footer /> {/* <-- 2. Add the Footer here! */}
         </div>
-      </div>
-    </Router>
+      </Router>
+    </PortfolioProvider>
   );
 }
 
