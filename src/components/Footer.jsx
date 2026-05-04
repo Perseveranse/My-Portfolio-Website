@@ -46,7 +46,7 @@ const Footer = () => {
       </div>
 
       <div className="flex flex-col justify-between gap-4 border-t border-cyan-200/10 px-6 py-5 text-sm font-bold text-cyan-50/45 md:flex-row md:items-center md:px-8">
-        <p>&copy; {year} Cornelius. Tech portfolio built with React, Vite, and Vercel.</p>
+        <p>&copy; {year} Cornelius. All rights reserved.</p>
         <div className="flex flex-wrap gap-2">
           <span className="inline-flex items-center gap-2 rounded-lg border border-cyan-200/10 px-3 py-2">
             <MapPin size={15} /> {profile.location}
