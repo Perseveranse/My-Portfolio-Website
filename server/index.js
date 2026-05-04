@@ -1,19 +1,26 @@
-/* global Buffer, process */
+/* global process */
 
 import { createServer } from 'node:http';
 import { stat } from 'node:fs/promises';
 import { createReadStream, existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { getBearerToken, signToken, verifyPassword, verifyToken } from './auth.js';
-import { findAdminByEmail, hasDatabase, initializeDatabase } from './database.js';
-import { readPortfolio, writePortfolio } from './storage.js';
+import { hasDatabase } from './database.js';
+import {
+  ensureDatabaseReady,
+  handleAdminLogin,
+  handleAdminMe,
+  handleAdminStatus,
+  handleEvents,
+  handleHealth,
+  handlePortfolio,
+  sendJson,
+} from './api.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 const distDir = path.join(rootDir, 'dist');
 const port = Number(process.env.PORT || 4174);
-const clients = new Set();
 
 const mimeTypes = {
   '.css': 'text/css; charset=utf-8',
@@ -26,190 +33,39 @@ const mimeTypes = {
   '.webp': 'image/webp',
 };
 
-const sendJson = (res, statusCode, payload) => {
-  res.writeHead(statusCode, {
-    'Content-Type': 'application/json; charset=utf-8',
-    'Cache-Control': 'no-store',
-  });
-  res.end(JSON.stringify(payload));
-};
-
-const readJsonBody = async (req) => {
-  const chunks = [];
-  let size = 0;
-
-  for await (const chunk of req) {
-    size += chunk.length;
-    if (size > 1024 * 1024) {
-      throw new Error('Request body is too large.');
-    }
-    chunks.push(chunk);
-  }
-
-  return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}');
-};
-
-const validateContent = (content) => {
-  const requiredArrays = ['metrics', 'stack', 'capabilities', 'projects', 'workflow', 'experience', 'credentials'];
-
-  if (!content || typeof content !== 'object' || Array.isArray(content)) {
-    return 'Portfolio content must be a JSON object.';
-  }
-
-  if (!content.profile || typeof content.profile !== 'object' || Array.isArray(content.profile)) {
-    return 'Portfolio content must include a profile object.';
-  }
-
-  const missingArray = requiredArrays.find((key) => !Array.isArray(content[key]));
-  if (missingArray) {
-    return `Portfolio content must include a ${missingArray} array.`;
-  }
-
-  return null;
-};
-
-const broadcastContent = (content) => {
-  const payload = `event: portfolio\ndata: ${JSON.stringify(content)}\n\n`;
-  for (const client of clients) {
-    client.write(payload);
-  }
-};
-
-const getAuthenticatedAdmin = async (req) => {
-  const payload = verifyToken(getBearerToken(req));
-  if (!payload?.email) return null;
-
-  const databaseAdmin = await findAdminByEmail(payload.email);
-  if (databaseAdmin) {
-    return {
-      id: databaseAdmin.id,
-      email: databaseAdmin.email,
-    };
-  }
-
-  if (!hasDatabase() && payload.email === process.env.ADMIN_EMAIL?.toLowerCase()) {
-    return {
-      id: 'env-admin',
-      email: payload.email,
-    };
-  }
-
-  return null;
-};
-
-const verifyEnvAdmin = (email, password) =>
-  !hasDatabase() &&
-  process.env.ADMIN_EMAIL &&
-  process.env.ADMIN_PASSWORD &&
-  email.toLowerCase() === process.env.ADMIN_EMAIL.toLowerCase() &&
-  password === process.env.ADMIN_PASSWORD;
-
-const loginAdmin = async ({ email, password }) => {
-  if (!email || !password) {
-    return null;
-  }
-
-  const databaseAdmin = await findAdminByEmail(email);
-  if (databaseAdmin && verifyPassword(password, databaseAdmin)) {
-    return {
-      id: databaseAdmin.id,
-      email: databaseAdmin.email,
-    };
-  }
-
-  if (verifyEnvAdmin(email, password)) {
-    return {
-      id: 'env-admin',
-      email: process.env.ADMIN_EMAIL.toLowerCase(),
-    };
-  }
-
-  return null;
-};
-
 const handleApi = async (req, res, pathname) => {
   if (pathname === '/api/health') {
-    sendJson(res, 200, {
-      ok: true,
-      database: hasDatabase() ? 'connected' : 'json-fallback',
-    });
+    await handleHealth(res);
     return true;
   }
 
   if (pathname === '/api/admin/status' && req.method === 'GET') {
-    sendJson(res, 200, {
-      database: hasDatabase() ? 'connected' : 'json-fallback',
-      loginReady: hasDatabase() || Boolean(process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD),
-    });
+    await handleAdminStatus(res);
     return true;
   }
 
   if (pathname === '/api/admin/login' && req.method === 'POST') {
-    const body = await readJsonBody(req);
-    const admin = await loginAdmin(body);
-
-    if (!admin) {
-      sendJson(res, 401, { error: 'Email or password is incorrect.' });
-      return true;
-    }
-
-    sendJson(res, 200, {
-      token: signToken({ id: admin.id, email: admin.email }),
-      user: { email: admin.email },
-    });
+    await handleAdminLogin(req, res);
     return true;
   }
 
   if (pathname === '/api/admin/me' && req.method === 'GET') {
-    const admin = await getAuthenticatedAdmin(req);
-
-    if (!admin) {
-      sendJson(res, 401, { error: 'Please log in again.' });
-      return true;
-    }
-
-    sendJson(res, 200, { user: { email: admin.email } });
+    await handleAdminMe(req, res);
     return true;
   }
 
   if (pathname === '/api/portfolio' && req.method === 'GET') {
-    sendJson(res, 200, await readPortfolio());
+    await handlePortfolio(req, res);
     return true;
   }
 
   if (pathname === '/api/events' && req.method === 'GET') {
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache, no-transform',
-      Connection: 'keep-alive',
-      'X-Accel-Buffering': 'no',
-    });
-    res.write('retry: 2000\n\n');
-    res.write(`event: portfolio\ndata: ${JSON.stringify(await readPortfolio())}\n\n`);
-    clients.add(res);
-    req.on('close', () => clients.delete(res));
+    await handleEvents(res);
     return true;
   }
 
   if (pathname === '/api/portfolio' && (req.method === 'PUT' || req.method === 'POST')) {
-    const admin = await getAuthenticatedAdmin(req);
-    if (!admin) {
-      sendJson(res, 401, { error: 'Please log in again before saving.' });
-      return true;
-    }
-
-    const content = await readJsonBody(req);
-    const validationError = validateContent(content);
-
-    if (validationError) {
-      sendJson(res, 400, { error: validationError });
-      return true;
-    }
-
-    const cleanContent = JSON.parse(JSON.stringify(content));
-    const savedContent = await writePortfolio(cleanContent);
-    broadcastContent(savedContent);
-    sendJson(res, 200, savedContent);
+    await handlePortfolio(req, res);
     return true;
   }
 
@@ -254,13 +110,7 @@ const server = createServer(async (req, res) => {
   }
 });
 
-setInterval(() => {
-  for (const client of clients) {
-    client.write(': heartbeat\n\n');
-  }
-}, 25000);
-
-await initializeDatabase();
+await ensureDatabaseReady();
 
 server.listen(port, () => {
   console.log(`Portfolio app running on http://localhost:${port}`);
