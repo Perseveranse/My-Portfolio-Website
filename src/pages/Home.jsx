@@ -203,7 +203,10 @@ const Home = () => {
           <p className="text-lg font-bold leading-8">
             Send the role, product idea, or technical problem. I can help with web apps, APIs, data systems, and deployment-ready interfaces.
           </p>
-          <Link to="/contact" className="mt-7 inline-flex items-center gap-2 rounded-lg bg-[#071116] px-6 py-4 text-sm font-black text-cyan-50">
+          <Link
+            to="/contact"
+            className="mt-7 inline-flex items-center justify-center gap-2 rounded-lg bg-[#071116] px-6 py-4 text-sm font-black !text-white shadow-[0_10px_26px_rgba(0,0,0,0.18)] transition-colors hover:bg-[#0d1c26] hover:!text-lime-200"
+          >
             Start Contact <CheckCircle2 size={18} />
           </Link>
         </div>
