@@ -106,7 +106,7 @@ const Home = () => {
             <h2 className="section-title font-black text-cyan-50">Built for tech products.</h2>
           </div>
           <p className="text-lg font-medium leading-8 text-cyan-50/58">
-            The site now behaves like a technology portfolio: every section points toward practical engineering skill, delivery readiness, and real project capability.
+            Every section points toward practical engineering skill, delivery readiness, and real project capability.
           </p>
         </div>
 
