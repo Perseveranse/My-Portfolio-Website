@@ -17,11 +17,6 @@ npm.cmd run server
 npm.cmd run dev
 ```
 
-Open:
-
-- Site: http://127.0.0.1:5173
-- Admin: http://127.0.0.1:5173/admin
-
 The backend uses PostgreSQL when `DATABASE_URL` is set. If `DATABASE_URL` is missing, it falls back to `src/data/portfolio-content.json` for local development only.
 
 For the local PostgreSQL 18 install on this machine, use:
@@ -36,9 +31,9 @@ If your password includes symbols like `@`, `#`, `/`, `?`, or `:`, URL-encode th
 ## Required Environment Variables
 
 - `DATABASE_URL`: PostgreSQL connection string.
-- `ADMIN_EMAIL`: first admin email. The server creates this admin if it does not exist.
-- `ADMIN_PASSWORD`: first admin password. Change it in your host settings after setup if needed.
-- `SESSION_SECRET`: long random secret used to sign admin sessions.
+- `ADMIN_EMAIL`: 
+- `ADMIN_PASSWORD`: 
+- `SESSION_SECRET`: 
 - `POSTGRES_SSL`: set to `true` for hosted Postgres providers such as Neon, Render, or Railway.
 
 ## Deployment
